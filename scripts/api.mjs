@@ -165,13 +165,39 @@ export async function rollSobrietyDie(actor, addictionId, {
 
   const resultLabel = localize(`Outcome.${resolution.outcome}`);
   const flavor = `
-    <div class="ars-roll-flavor">
-      <h3>${escapeHTML(actor.name)} — ${escapeHTML(addiction.name)}</h3>
-      ${trigger ? `<p><strong>${localize("Trigger.Label")}:</strong> ${escapeHTML(trigger)}</p>` : ""}
-      <p><strong>${localize("Roll.Mode")}:</strong> ${localize(`Roll.${mode}`)}</p>
-      <p><strong>${localize("Roll.Result")}:</strong> ${resultLabel}</p>
-      <p><strong>${localize("Addiction.Die")}:</strong> d${resolution.before} → d${resolution.after}</p>
-    </div>`;
+    <section class="ars-roll-flavor ars-outcome-${resolution.outcome}">
+      <header class="ars-roll-flavor-header">
+        <span class="ars-chat-icon"><i class="fa-solid fa-heart-pulse" inert></i></span>
+        <div>
+          <span class="ars-chat-eyebrow">${localize("Trigger.PromptTitle")}</span>
+          <h3>${escapeHTML(actor.name)}</h3>
+          <p>${escapeHTML(addiction.name)}</p>
+        </div>
+        <span class="ars-chat-die" data-tooltip="${localize("Addiction.Die")}">d${resolution.before}</span>
+      </header>
+      ${trigger ? `
+        <div class="ars-roll-trigger">
+          <i class="fa-solid fa-bolt" inert></i>
+          <span><strong>${localize("Trigger.Label")}</strong>${escapeHTML(trigger)}</span>
+        </div>` : ""}
+      <div class="ars-roll-summary">
+        <span>
+          <small>${localize("Roll.Mode")}</small>
+          <strong>${localize(`Roll.${mode}`)}</strong>
+        </span>
+        <span>
+          <small>${localize("Addiction.Die")}</small>
+          <strong>d${resolution.before} <i class="fa-solid fa-arrow-right" inert></i> d${resolution.after}</strong>
+        </span>
+      </div>
+      <div class="ars-outcome-banner">
+        <i class="fa-solid ${resolution.naturalOne ? "fa-triangle-exclamation" : "fa-shield-heart"}" inert></i>
+        <span>
+          <small>${localize("Roll.Result")}</small>
+          <strong>${resultLabel}</strong>
+        </span>
+      </div>
+    </section>`;
 
   const messageData = {
     speaker: ChatMessage.getSpeaker({ actor }),
@@ -207,45 +233,42 @@ export async function createTriggerPrompt(actor, addictionId, trigger="") {
   const addiction = getAddiction(actor, addictionId);
   if ( !addiction ) return null;
 
-  const rollModes = [
-    ["publicroll", "RollModePublic"],
-    ["gmroll", "RollModePrivate"],
-    ["blindroll", "RollModeBlind"],
-    ["selfroll", "RollModeSelf"]
-  ];
-  const defaultMode = game.settings.get(MODULE_ID, "defaultRollMode");
-  const options = rollModes.map(([value, key]) => (
-    `<option value="${value}" ${value === defaultMode ? "selected" : ""}>${game.i18n.localize(key)}</option>`
-  )).join("");
   const safeActor = escapeHTML(actor.name);
   const safeAddiction = escapeHTML(addiction.name);
   const safeTrigger = escapeHTML(trigger || localize("Trigger.Unspecified"));
+  const safeImage = escapeHTML(actor.img || "icons/svg/mystery-man.svg");
   const content = `
     <article class="ars-trigger-card" data-actor-id="${actor.id}" data-addiction-id="${addiction.id}">
-      <header>
-        <i class="fa-solid fa-heart-pulse" inert></i>
+      <header class="ars-trigger-hero">
+        <img src="${safeImage}" alt="${safeActor}">
         <div>
-          <h3>${localize("Trigger.PromptTitle")}</h3>
-          <p>${safeActor} — ${safeAddiction}</p>
+          <span class="ars-chat-eyebrow">${localize("Trigger.PromptTitle")}</span>
+          <h3>${safeActor}</h3>
+          <p>${safeAddiction}</p>
         </div>
+        <span class="ars-chat-die" data-tooltip="${localize("Addiction.Die")}">d${addiction.die}</span>
       </header>
-      <p class="ars-trigger-text"><strong>${localize("Trigger.Label")}:</strong> ${safeTrigger}</p>
-      <p>${localize("Trigger.PromptHint")}</p>
-      <label class="ars-chat-roll-mode">
-        <span>${localize("Roll.RollMode")}</span>
-        <select data-ars-roll-mode>${options}</select>
-      </label>
-      <div class="ars-trigger-actions">
-        <button type="button" data-ars-roll="disadvantage"><i class="fa-solid fa-angles-down"></i>
-          ${localize("Roll.disadvantage")}</button>
-        <button type="button" data-ars-roll="normal"><i class="fa-solid fa-dice"></i>
-          ${localize("Roll.normal")}</button>
-        <button type="button" data-ars-roll="advantage"><i class="fa-solid fa-angles-up"></i>
-          ${localize("Roll.advantage")}</button>
+      <div class="ars-trigger-callout">
+        <i class="fa-solid fa-bolt" inert></i>
+        <span>
+          <strong>${localize("Trigger.Label")}</strong>
+          ${safeTrigger}
+        </span>
+      </div>
+      <p class="ars-trigger-hint">${localize("Trigger.PromptHint")}</p>
+      <div class="ars-trigger-footer">
+        <span class="ars-trigger-state" data-ars-trigger-state>
+          <i class="fa-solid fa-hourglass-half" inert></i>
+          <span>${localize("Trigger.AwaitingRoll")}</span>
+        </span>
+        <button type="button" data-ars-open-roll>
+          <i class="fa-solid fa-dice-d20" inert></i>
+          ${localize("Trigger.OpenRollDialog")}
+        </button>
       </div>
     </article>`;
 
-  return ChatMessage.create({
+  const message = await ChatMessage.create({
     content,
     whisper: ownerAndGMWhispers(actor),
     speaker: ChatMessage.getSpeaker({ actor, alias: actor.name }),
@@ -259,6 +282,11 @@ export async function createTriggerPrompt(actor, addictionId, trigger="") {
       }
     }
   });
+  Hooks.callAll(`${MODULE_ID}.triggerPromptCreated`, {
+    type: "showTriggerDialog",
+    messageId: message.id
+  });
+  return message;
 }
 
 export function applyLongRestRecovery(actor, result, config) {
@@ -266,11 +294,19 @@ export function applyLongRestRecovery(actor, result, config) {
   const data = getActorData(actor);
   if ( !data.addictions.length ) return [];
   const selected = config.addictionRecovery === true || config.addictionRecovery === "true";
+  const requestedTarget = String(config.addictionRecoveryTarget ?? "all");
+  const targetId = selected && data.addictions.some(addiction => addiction.id === requestedTarget)
+    ? requestedTarget
+    : "all";
+  const targetName = targetId === "all"
+    ? null
+    : data.addictions.find(addiction => addiction.id === targetId)?.name ?? null;
   const rules = getRules();
   const summaries = [];
 
   data.addictions = data.addictions.map(addiction => {
     if ( addiction.status === "recovered" ) return addiction;
+    if ( selected && targetId !== "all" && addiction.id !== targetId ) return addiction;
     const resolution = resolveRecovery(addiction, selected, rules);
     summaries.push({
       id: addiction.id,
@@ -291,7 +327,7 @@ export function applyLongRestRecovery(actor, result, config) {
   });
 
   foundry.utils.setProperty(result.updateData, `flags.${MODULE_ID}.${FLAG_KEY}`, data);
-  result[MODULE_ID] = { selected, summaries };
+  result[MODULE_ID] = { selected, targetId, targetName, summaries };
   return summaries;
 }
 

@@ -13,6 +13,12 @@ import {
 import { openManager, refreshManager } from "./manager.mjs";
 
 const SOCKET = `module.${MODULE_ID}`;
+const openTriggerDialogs = new Set();
+
+Hooks.on(`${MODULE_ID}.triggerPromptCreated`, payload => {
+  game.socket.emit(SOCKET, payload);
+  openTriggerRollDialog(payload);
+});
 
 Hooks.once("init", () => {
   registerSettings();
@@ -274,26 +280,52 @@ function injectLongRestSection(app, element) {
 
   const fieldset = document.createElement("fieldset");
   fieldset.className = "ars-long-rest-section";
+  const targetOptions = [
+    `<option value="all">${localize("Rest.AllAddictions")}</option>`,
+    ...addictions.map(addiction => (
+      `<option value="${escape(addiction.id)}">${escape(addiction.name)} — d${addiction.die}</option>`
+    ))
+  ].join("");
   fieldset.innerHTML = `
     <legend>${localize("Rest.Title")}</legend>
     <div class="form-group">
       <label class="checkbox">
-        <input type="checkbox" name="addictionRecovery" value="true">
+        <input type="checkbox" name="addictionRecovery" value="true" data-ars-rest-recovery>
         <span>${localize("Rest.Checkbox")}</span>
       </label>
       <p class="hint">${localize("Rest.Hint")}</p>
-    </div>`;
+    </div>
+    ${game.user.isGM ? `
+      <div class="form-group ars-rest-target">
+        <label>
+          <span>${localize("Rest.Target")}</span>
+          <select name="addictionRecoveryTarget" data-ars-rest-target disabled>
+            ${targetOptions}
+          </select>
+        </label>
+        <p class="hint">${localize("Rest.TargetHint")}</p>
+      </div>` : `
+      <input type="hidden" name="addictionRecoveryTarget" value="all">`}`;
   const section = element.querySelector("[data-application-part='content'] > section, section.flexcol");
   const request = [...section?.querySelectorAll(":scope > fieldset") ?? []]
     .find(candidate => candidate.querySelector("[name='autoRest'], [name^='targets.']"));
   if ( request ) request.insertAdjacentElement("beforebegin", fieldset);
   else section?.append(fieldset);
+
+  const recoveryCheckbox = fieldset.querySelector("[data-ars-rest-recovery]");
+  const targetSelect = fieldset.querySelector("[data-ars-rest-target]");
+  recoveryCheckbox?.addEventListener("change", () => {
+    if ( targetSelect ) targetSelect.disabled = !recoveryCheckbox.checked;
+  });
 }
 
 async function appendRestSummary(actor, result) {
   const recovery = result[MODULE_ID];
   if ( result.type !== "long" || !recovery?.summaries?.length || !result.message ) return;
   const selection = recovery.selected ? localize("Rest.Selected") : localize("Rest.NotSelected");
+  const target = recovery.targetId === "all"
+    ? localize("Rest.AllAddictions")
+    : recovery.targetName;
   const rows = recovery.summaries.map(summary => `
     <li>
       <strong>${escape(summary.name)}</strong>
@@ -305,6 +337,7 @@ async function appendRestSummary(actor, result) {
     <section class="ars-rest-summary">
       <h3><i class="fa-solid fa-heart-pulse" inert></i> ${localize("Rest.Title")}</h3>
       <p><strong>${localize("Rest.Choice")}:</strong> ${selection}</p>
+      ${recovery.selected ? `<p><strong>${localize("Rest.Target")}:</strong> ${escape(target)}</p>` : ""}
       <ul>${rows}</ul>
     </section>`;
   await result.message.update({ content: `${result.message.content}${addition}` });
@@ -323,44 +356,128 @@ function enhanceChatMessage(message, html) {
   if ( !card ) return;
   const actor = game.actors.get(flags.actorId);
   const allowed = game.user.isGM || actor?.isOwner;
-  const buttons = card.querySelectorAll("[data-ars-roll]");
+  const openButton = card.querySelector("[data-ars-open-roll]");
+  const state = card.querySelector("[data-ars-trigger-state]");
 
   if ( flags.resolved ) {
-    buttons.forEach(button => button.disabled = true);
-    card.querySelector("select")?.setAttribute("disabled", "");
-    if ( !card.querySelector(".ars-resolved") ) {
-      const notice = document.createElement("p");
-      notice.className = "ars-resolved";
-      notice.innerHTML = `<i class="fa-solid fa-check" inert></i> ${localize("Trigger.Resolved")}`;
-      card.append(notice);
+    card.classList.add("is-resolved");
+    openButton?.remove();
+    if ( state ) {
+      state.classList.add("ars-resolved");
+      state.innerHTML = `<i class="fa-solid fa-circle-check" inert></i><span>${localize("Trigger.Resolved")}</span>`;
     }
     return;
   }
 
-  if ( !allowed ) {
-    buttons.forEach(button => button.disabled = true);
-    return;
-  }
+  if ( !allowed ) openButton?.remove();
+  else openButton?.addEventListener("click", () => openTriggerRollDialog({
+    type: "showTriggerDialog",
+    messageId: message.id
+  }));
+}
 
-  for ( const button of buttons ) {
-    button.addEventListener("click", async () => {
-      if ( card.dataset.rolling === "true" ) return;
-      card.dataset.rolling = "true";
-      buttons.forEach(candidate => candidate.disabled = true);
-      const rollMode = card.querySelector("[data-ars-roll-mode]").value;
-      try {
-        const result = await rollSobrietyDie(actor, flags.addictionId, {
-          mode: button.dataset.arsRoll,
-          rollMode,
-          trigger: flags.trigger,
-          promptMessageId: message.id
-        });
-        if ( result ) await markPromptResolved(message, result);
-        else buttons.forEach(candidate => candidate.disabled = false);
-      } finally {
-        delete card.dataset.rolling;
-      }
+async function openTriggerRollDialog(payload) {
+  const messageId = payload?.messageId;
+  if ( !messageId || openTriggerDialogs.has(messageId) ) return;
+
+  const message = game.messages.get(messageId);
+  const flags = message?.flags?.[MODULE_ID];
+  if ( !message || flags?.type !== "trigger-prompt" || flags.resolved ) return;
+
+  const actor = game.actors.get(flags.actorId);
+  if ( !actor || (!game.user.isGM && !actor.isOwner) ) return;
+  const addiction = getActorData(actor).addictions.find(entry => entry.id === flags.addictionId);
+  if ( !addiction || addiction.status !== "recovery" ) return;
+
+  const options = rollModeOptions(game.settings.get(MODULE_ID, "defaultRollMode"));
+  const safeActor = escape(actor.name);
+  const safeAddiction = escape(addiction.name);
+  const safeTrigger = escape(flags.trigger || localize("Trigger.Unspecified"));
+  const content = `
+    <div class="ars-roll-dialog-content">
+      <div class="ars-roll-dialog-identity">
+        <span class="ars-roll-dialog-icon"><i class="fa-solid fa-heart-pulse" inert></i></span>
+        <div>
+          <span>${safeActor}</span>
+          <strong>${safeAddiction}</strong>
+        </div>
+      </div>
+      <div class="ars-roll-dialog-die" aria-label="${escape(localize("Addiction.Die"))}: d${addiction.die}">
+        <i class="fa-solid fa-dice-d20" inert></i>
+        <strong>d${addiction.die}</strong>
+      </div>
+      <div class="ars-roll-dialog-formula">
+        <strong>1d${addiction.die}</strong>
+        <span>${localize("Roll.Formula")}</span>
+      </div>
+      <div class="ars-roll-dialog-trigger">
+        <i class="fa-solid fa-bolt" inert></i>
+        <span><small>${localize("Trigger.Label")}</small><strong>${safeTrigger}</strong></span>
+      </div>
+      <fieldset>
+        <legend>${localize("Roll.Configuration")}</legend>
+        <label>
+          <span>${localize("Roll.RollMode")}</span>
+          <select name="rollMode" data-ars-dialog-roll-mode>${options}</select>
+        </label>
+      </fieldset>
+    </div>`;
+
+  const selectedRoll = mode => (_event, button) => ({
+    mode,
+    rollMode: button.form.elements.rollMode.value
+  });
+
+  openTriggerDialogs.add(messageId);
+  try {
+    const selection = await foundry.applications.api.DialogV2.wait({
+      classes: ["ars-roll-dialog-window"],
+      position: { width: 460 },
+      window: {
+        icon: "fa-solid fa-heart-pulse",
+        title: localize("Trigger.RollDialogTitle")
+      },
+      content,
+      buttons: [
+        {
+          action: "advantage",
+          icon: "fa-solid fa-angles-up",
+          label: localize("Roll.advantage"),
+          callback: selectedRoll("advantage")
+        },
+        {
+          action: "normal",
+          icon: "fa-solid fa-dice",
+          label: localize("Roll.normal"),
+          default: true,
+          callback: selectedRoll("normal")
+        },
+        {
+          action: "disadvantage",
+          icon: "fa-solid fa-angles-down",
+          label: localize("Roll.disadvantage"),
+          callback: selectedRoll("disadvantage")
+        }
+      ],
+      rejectClose: false
     });
+    if ( !selection ) return;
+
+    const currentMessage = game.messages.get(messageId);
+    if ( currentMessage?.flags?.[MODULE_ID]?.resolved ) {
+      ui.notifications.info(localize("Notifications.TriggerAlreadyResolved"));
+      return;
+    }
+
+    const result = await rollSobrietyDie(actor, flags.addictionId, {
+      mode: selection.mode,
+      rollMode: selection.rollMode,
+      trigger: flags.trigger,
+      promptMessageId: messageId
+    });
+    if ( result ) await markPromptResolved(currentMessage, result);
+  } finally {
+    openTriggerDialogs.delete(messageId);
   }
 }
 
@@ -379,6 +496,10 @@ async function markPromptResolved(message, result) {
 }
 
 async function handleSocket(payload) {
+  if ( payload?.type === "showTriggerDialog" ) {
+    await openTriggerRollDialog(payload);
+    return;
+  }
   if ( !game.user.isActiveGM ) return;
   if ( payload?.type === "resolvePrompt" ) await resolvePrompt(payload);
 }

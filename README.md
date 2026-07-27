@@ -21,7 +21,8 @@ recovery or relapse is portrayed.
   "cannot be resolved through recovery alone" marker.
 - Movable and lockable GM shortcut panel.
 - GM-triggered private chat prompts sent to the character owners and GMs.
-- Normal, Advantage, and Disadvantage Sobriety Die rolls.
+- A dedicated Sobriety Roll window with Roll Mode and Normal, Advantage, or
+  Disadvantage controls instead of placing those controls directly in chat.
 - Public, Private GM, Blind GM, and Self roll modes.
 - A natural 1 uses the classic dnd5e critical-failure styling.
 - Automatic die reduction and relapse state.
@@ -29,6 +30,8 @@ recovery or relapse is portrayed.
   below the Loot section.
 - Player-editable Sobriety Triggers (GM-configurable).
 - Third "Addiction Recovery" section in the dnd5e Long Rest dialog.
+- GM choice during Long Rest to apply recovery to all addictions or one
+  specific addiction.
 - Addiction Recovery details appended to the standard Long Rest chat summary.
 - GM-configurable die ladder, thresholds, step changes, downtime behavior,
   history size, default roll mode, and optional completion above the maximum die.
@@ -70,8 +73,8 @@ version tag is pushed.
 4. Create and push a matching tag, for example:
 
 ```bash
-git tag v0.1.2
-git push origin v0.1.2
+git tag v0.1.3
+git push origin v0.1.3
 ```
 
 The workflow verifies that the tag and manifest versions match, then publishes

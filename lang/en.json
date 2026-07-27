@@ -52,6 +52,9 @@
       "PromptTitle": "Sobriety Trigger",
       "PromptHint": "A Sobriety Trigger is present. Choose how to roll your current Sobriety Die.",
       "Unspecified": "A Sobriety Trigger is present",
+      "AwaitingRoll": "Awaiting Sobriety Roll",
+      "OpenRollDialog": "Open roll window",
+      "RollDialogTitle": "Sobriety Roll",
       "Resolved": "This Trigger roll has been resolved.",
       "Manual": "Manual Sobriety Die roll"
     },
@@ -59,6 +62,8 @@
       "RollMode": "Roll mode",
       "Mode": "Roll",
       "Result": "Result",
+      "Formula": "Formula",
+      "Configuration": "Configuration",
       "normal": "Normal",
       "advantage": "Advantage",
       "disadvantage": "Disadvantage"
@@ -71,6 +76,9 @@
       "Checkbox": "Use this downtime to work on sobriety",
       "Hint": "When selected, each addiction improves its Sobriety Die by the configured number of steps. A character in relapse enters or re-enters recovery at the lowest die.",
       "Choice": "Downtime choice",
+      "Target": "Recovery focus",
+      "AllAddictions": "All addictions",
+      "TargetHint": "GM: improve every addiction or focus this downtime on one specific addiction.",
       "Selected": "Worked on sobriety",
       "NotSelected": "Did not select recovery work"
     },
@@ -91,6 +99,7 @@
       "GMOnly": "Only the GM can send a Sobriety Trigger prompt.",
       "Saved": "Addiction Recovery data saved.",
       "TriggerSent": "Sobriety Trigger sent to the character and GM.",
+      "TriggerAlreadyResolved": "This Sobriety Trigger has already been resolved.",
       "VersionWarning": "Addiction Recovery System was built for Foundry VTT 13 build 351 and dnd5e 5.3.3. Other versions are not supported by this release."
     },
     "Settings": {

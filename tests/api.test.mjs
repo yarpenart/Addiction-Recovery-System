@@ -42,7 +42,8 @@ globalThis.game = {
 globalThis.ui = { notifications: { warn() {}, info() {} } };
 globalThis.Hooks = { callAll() {} };
 globalThis.ChatMessage = {
-  getSpeaker: () => ({ alias: "Test" })
+  getSpeaker: () => ({ alias: "Test" }),
+  create: async data => ({ id: "prompt-message", ...data })
 };
 
 class TestRoll {
@@ -103,5 +104,25 @@ assert.equal(
   result.updateData.flags["addiction-recovery-system"].data.addictions[0].die,
   6
 );
+
+const secondAddiction = await api.addAddiction(actor);
+await api.updateAddiction(actor, secondAddiction.id, {
+  name: "Second Addiction",
+  die: 8
+});
+const targetedResult = { type: "long", updateData: {} };
+const targetedSummaries = api.applyLongRestRecovery(actor, targetedResult, {
+  addictionRecovery: true,
+  addictionRecoveryTarget: addiction.id
+});
+const targetedAddictions = targetedResult.updateData.flags["addiction-recovery-system"].data.addictions;
+assert.equal(targetedAddictions.find(entry => entry.id === addiction.id).die, 6);
+assert.equal(targetedAddictions.find(entry => entry.id === secondAddiction.id).die, 8);
+assert.equal(targetedSummaries.length, 1);
+assert.equal(targetedResult["addiction-recovery-system"].targetId, addiction.id);
+
+const prompt = await api.createTriggerPrompt(actor, addiction.id, "Isolation");
+assert.match(prompt.content, /data-ars-open-roll/);
+assert.doesNotMatch(prompt.content, /data-ars-roll="/);
 
 console.log("api tests passed");

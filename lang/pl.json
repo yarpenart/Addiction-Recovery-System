@@ -52,6 +52,9 @@
       "PromptTitle": "Sobriety Trigger",
       "PromptHint": "Pojawił się Sobriety Trigger. Wybierz sposób rzutu aktualną Sobriety Die.",
       "Unspecified": "Pojawił się Sobriety Trigger",
+      "AwaitingRoll": "Oczekiwanie na Sobriety Roll",
+      "OpenRollDialog": "Otwórz okno rzutu",
+      "RollDialogTitle": "Rzut Sobriety Die",
       "Resolved": "Rzut dla tego Triggera został rozstrzygnięty.",
       "Manual": "Ręczny rzut Sobriety Die"
     },
@@ -59,6 +62,8 @@
       "RollMode": "Tryb rzutu",
       "Mode": "Rzut",
       "Result": "Wynik",
+      "Formula": "Formuła",
+      "Configuration": "Konfiguracja",
       "normal": "Normalnie",
       "advantage": "Z przewagą",
       "disadvantage": "Z utrudnieniem"
@@ -71,6 +76,9 @@
       "Checkbox": "Poświęć ten downtime na pracę nad trzeźwością",
       "Hint": "Po zaznaczeniu Sobriety Die każdego uzależnienia wzrasta o skonfigurowaną liczbę stopni. Postać po nawrocie rozpoczyna lub ponownie podejmuje zdrowienie z najniższą kością.",
       "Choice": "Wybór podczas downtime",
+      "Target": "Cel zdrowienia",
+      "AllAddictions": "Wszystkie uzależnienia",
+      "TargetHint": "GM: zwiększ kość wszystkich uzależnień albo skup ten downtime na jednym wybranym uzależnieniu.",
       "Selected": "Praca nad trzeźwością",
       "NotSelected": "Nie wybrano pracy nad zdrowieniem"
     },
@@ -91,6 +99,7 @@
       "GMOnly": "Tylko GM może wysłać komunikat Sobriety Trigger.",
       "Saved": "Zapisano dane Addiction Recovery.",
       "TriggerSent": "Sobriety Trigger wysłano do postaci i GM-a.",
+      "TriggerAlreadyResolved": "Ten Sobriety Trigger został już rozstrzygnięty.",
       "VersionWarning": "Addiction Recovery System został przygotowany dla Foundry VTT 13 build 351 i dnd5e 5.3.3. Ta wersja modułu nie obsługuje innych wersji."
     },
     "Settings": {
