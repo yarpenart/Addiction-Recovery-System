@@ -36,16 +36,20 @@ recovery or relapse is portrayed.
 
 ## Installation
 
+### Manifest URL
+
+Install or update the module in Foundry/The Forge with:
+
+```text
+https://github.com/yarpenart/addiction-recovery-system/releases/latest/download/module.json
+```
+
 For manual installation, create:
 
 `FoundryVTT/Data/modules/addiction-recovery-system/`
 
 and extract the ZIP contents into that directory so that `module.json` is
 directly inside it.
-
-On The Forge, upload the ZIP as a custom module if that option is available for
-your subscription, or publish the module through a GitHub release and install it
-from its manifest URL.
 
 After enabling the module:
 
@@ -54,6 +58,24 @@ After enabling the module:
 3. Find a character and select **Add addiction**.
 4. Configure the addiction and save it.
 5. Enter a scene Trigger in that addiction's card and select **Send Trigger**.
+
+## Publishing a release
+
+The included GitHub Actions workflow creates a Foundry-ready release whenever a
+version tag is pushed.
+
+1. Set the new version in `module.json`.
+2. Update the version in the `download` URL in `module.json`.
+3. Commit and push the changes to `main`.
+4. Create and push a matching tag, for example:
+
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+The workflow verifies that the tag and manifest versions match, then publishes
+`module.json` and `addiction-recovery-system.zip` as release assets.
 
 ## Original rule defaults
 
