@@ -11,7 +11,7 @@ const settings = new Map([
   ["historyLimit", 50],
   ["defaultRollMode", "publicroll"],
   ["playersEditTriggers", true],
-  ["longRestRecoveryTargets", { mode: "all" }]
+  ["longRestRecoveryTargets", { mode: "all", otherAddictions: "unchanged" }]
 ]);
 
 let id = 0;
@@ -39,6 +39,9 @@ globalThis.game = {
     isGM: true
   },
   users: []
+};
+globalThis.game.messages = {
+  get: () => null
 };
 globalThis.ui = { notifications: { warn() {}, info() {} } };
 globalThis.Hooks = { callAll() {} };
@@ -113,7 +116,8 @@ await api.updateAddiction(actor, secondAddiction.id, {
 });
 const targetedResult = { type: "long", updateData: {} };
 settings.set("longRestRecoveryTargets", {
-  mode: "specific"
+  mode: "specific",
+  otherAddictions: "unchanged"
 });
 const targetedSummaries = api.applyLongRestRecovery(actor, targetedResult, {
   addictionRecovery: true,
@@ -125,6 +129,20 @@ assert.equal(targetedAddictions.find(entry => entry.id === secondAddiction.id).d
 assert.equal(targetedSummaries.length, 1);
 assert.equal(targetedResult["addiction-recovery-system"].targetId, addiction.id);
 assert.equal(targetedResult["addiction-recovery-system"].targetName, "Test Addiction");
+
+const decreaseOthersResult = { type: "long", updateData: {} };
+settings.set("longRestRecoveryTargets", {
+  mode: "specific",
+  otherAddictions: "decrease"
+});
+const decreaseOthersSummaries = api.applyLongRestRecovery(actor, decreaseOthersResult, {
+  addictionRecovery: true,
+  addictionRecoveryTarget: addiction.id
+});
+const decreaseOthers = decreaseOthersResult.updateData.flags["addiction-recovery-system"].data.addictions;
+assert.equal(decreaseOthers.find(entry => entry.id === addiction.id).die, 6);
+assert.equal(decreaseOthers.find(entry => entry.id === secondAddiction.id).die, 6);
+assert.equal(decreaseOthersSummaries.length, 2);
 
 const invalidTargetResult = { type: "long", updateData: {} };
 const invalidTargetSummaries = api.applyLongRestRecovery(actor, invalidTargetResult, {
@@ -141,5 +159,22 @@ assert.equal(
 const prompt = await api.createTriggerPrompt(actor, addiction.id, "Isolation");
 assert.match(prompt.content, /data-ars-open-roll/);
 assert.doesNotMatch(prompt.content, /data-ars-roll="/);
+
+game.user.isGM = false;
+const manualPlayerRoll = await api.rollSobrietyDie(actor, addiction.id, {
+  mode: "normal",
+  rollMode: "publicroll",
+  trigger: "Manual"
+});
+assert.equal(manualPlayerRoll, null);
+
+game.messages.get = messageId => messageId === prompt.id ? prompt : null;
+const promptedPlayerRoll = await api.rollSobrietyDie(actor, addiction.id, {
+  mode: "normal",
+  rollMode: "publicroll",
+  trigger: "Isolation",
+  promptMessageId: prompt.id
+});
+assert.ok(promptedPlayerRoll);
 
 console.log("api tests passed");

@@ -138,7 +138,8 @@ function registerSettings() {
     config: false,
     type: Object,
     default: {
-      mode: "all"
+      mode: "all",
+      otherAddictions: "unchanged"
     }
   });
 
@@ -222,7 +223,7 @@ function sheetAddictionHTML(actor, addiction, editable) {
           <button type="button" data-ars-save-triggers>
             <i class="fa-solid fa-floppy-disk" inert></i> ${localize("Manager.SaveTriggers")}
           </button>` : ""}
-        <div class="ars-sheet-roll-controls">
+        ${game.user.isGM ? `<div class="ars-sheet-roll-controls">
           <label>
             <span>${localize("Roll.RollMode")}</span>
             <select data-ars-sheet-roll-mode ${canRoll ? "" : "disabled"}>${rollModeOptions(mode)}</select>
@@ -238,7 +239,7 @@ function sheetAddictionHTML(actor, addiction, editable) {
               <i class="fa-solid fa-angles-up" inert></i> ${localize("Roll.advantage")}
             </button>
           </div>
-        </div>
+        </div>` : ""}
       </div>
     </details>`;
 }

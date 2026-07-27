@@ -5,7 +5,8 @@ for ( const die of [4, 6, 8, 10, 12, 20] ) {
   const icon = sobrietyDieIcon(die);
   assert.match(icon, new RegExp(`data-die="${die}"`));
   assert.match(icon, /ars-polyhedral-die/);
-  assert.match(icon, /ars-die-shell/);
+  assert.match(icon, new RegExp(`assets/dice/d${die}\\.svg`));
+  assert.match(icon, /<img/);
   assert.doesNotMatch(icon, /fa-dice-d20/);
 }
 

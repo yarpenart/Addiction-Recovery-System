@@ -47,6 +47,8 @@ export function resolveSobrietyRoll(addiction, total, rules={}) {
   if ( failed && atMinimum && rules.relapseOnMinimumFailure !== false ) {
     status = "relapse";
     outcome = "relapse";
+  } else if ( failed && addiction.incurable ) {
+    outcome = "locked";
   } else if ( failed ) {
     after = shiftDie(before, -dropSteps, ladder);
     outcome = "reduced";
@@ -71,6 +73,16 @@ export function resolveRecovery(addiction, selected, rules={}) {
   let status = initialStatus;
   let outcome = "unchanged";
 
+  if ( addiction.incurable ) {
+    return {
+      before,
+      after,
+      status,
+      outcome: "locked",
+      selected: Boolean(selected)
+    };
+  }
+
   if ( selected ) {
     if ( initialStatus === "relapse" || initialStatus === "inactive" ) {
       after = ladder[0];
@@ -78,7 +90,7 @@ export function resolveRecovery(addiction, selected, rules={}) {
       outcome = "reentered";
     } else if ( initialStatus === "recovery" ) {
       const atMaximum = before === ladder.at(-1);
-      if ( atMaximum && rules.completeAtMaximum && !addiction.incurable ) {
+      if ( atMaximum && rules.completeAtMaximum ) {
         status = "recovered";
         outcome = "recovered";
       } else {

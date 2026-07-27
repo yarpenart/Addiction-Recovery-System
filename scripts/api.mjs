@@ -42,7 +42,8 @@ export function getRules() {
 export function getLongRestRecoveryConfig() {
   const stored = game.settings.get(MODULE_ID, "longRestRecoveryTargets");
   const mode = stored?.mode === "specific" ? "specific" : "all";
-  return { mode };
+  const otherAddictions = stored?.otherAddictions === "decrease" ? "decrease" : "unchanged";
+  return { mode, otherAddictions };
 }
 
 export function getLongRestRecoveryTarget(actor, addictionId=null) {
@@ -135,6 +136,18 @@ export function canEditTriggers(actor) {
   ));
 }
 
+function isValidTriggerPrompt(actor, addictionId, promptMessageId) {
+  if ( !promptMessageId ) return false;
+  const message = game.messages?.get(promptMessageId);
+  const flags = message?.flags?.[MODULE_ID];
+  return Boolean(
+    flags?.type === "trigger-prompt"
+    && flags.actorId === actor?.id
+    && flags.addictionId === addictionId
+    && !flags.resolved
+  );
+}
+
 function historyEntry(type, details={}) {
   return {
     id: foundry.utils.randomID(),
@@ -153,6 +166,10 @@ export async function rollSobrietyDie(actor, addictionId, {
 }={}) {
   if ( !actor || !canManageActor(actor) ) {
     ui.notifications.warn(localize("Notifications.NoPermission"));
+    return null;
+  }
+  if ( !game.user.isGM && !isValidTriggerPrompt(actor, addictionId, promptMessageId) ) {
+    ui.notifications.warn(localize("Notifications.ManualRollGMOnly"));
     return null;
   }
 
@@ -215,7 +232,11 @@ export async function rollSobrietyDie(actor, addictionId, {
         </span>
       </div>
       <div class="ars-outcome-banner">
-        <i class="fa-solid ${resolution.naturalOne ? "fa-triangle-exclamation" : "fa-shield-heart"}" inert></i>
+        <i class="fa-solid ${
+          resolution.outcome === "locked"
+            ? "fa-lock"
+            : resolution.naturalOne ? "fa-triangle-exclamation" : "fa-shield-heart"
+        }" inert></i>
         <span>
           <small>${localize("Roll.Result")}</small>
           <strong>${resultLabel}</strong>
@@ -335,11 +356,26 @@ export function applyLongRestRecovery(actor, result, config) {
     : null;
   const rules = getRules();
   const summaries = [];
+  const invalidSpecificTarget = selected
+    && recoveryConfig.mode === "specific"
+    && !target.addictions.length;
 
   data.addictions = data.addictions.map(addiction => {
     if ( addiction.status === "recovered" ) return addiction;
-    if ( selected && !targetIds.has(addiction.id) ) return addiction;
-    const resolution = resolveRecovery(addiction, selected, rules);
+    if ( invalidSpecificTarget ) return addiction;
+
+    const isSelectedTarget = selected && targetIds.has(addiction.id);
+    const decreaseUnselected = selected
+      && target.mode === "specific"
+      && recoveryConfig.otherAddictions === "decrease"
+      && !isSelectedTarget;
+    if ( selected && !isSelectedTarget && !decreaseUnselected ) return addiction;
+
+    const recoverySelected = selected ? isSelectedTarget : false;
+    const resolutionRules = decreaseUnselected
+      ? { ...rules, uncheckedBehavior: "decrease" }
+      : rules;
+    const resolution = resolveRecovery(addiction, recoverySelected, resolutionRules);
     summaries.push({
       id: addiction.id,
       name: addiction.name,
@@ -351,7 +387,7 @@ export function applyLongRestRecovery(actor, result, config) {
       die: resolution.after,
       status: resolution.status
     }, historyEntry("recovery", {
-      selected,
+      selected: recoverySelected,
       dieBefore: resolution.before,
       dieAfter: resolution.after,
       outcome: resolution.outcome

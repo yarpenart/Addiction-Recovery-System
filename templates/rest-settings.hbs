@@ -17,6 +17,25 @@
     </label>
   </div>
 
+  <div class="ars-rest-settings-mode ars-rest-settings-other" data-ars-specific-options>
+    <h3>{{ localize "ARS.RestSettings.OtherAddictions" }}</h3>
+    <p>{{ localize "ARS.RestSettings.OtherAddictionsHint" }}</p>
+    <label>
+      <input type="radio" name="otherAddictions" value="decrease" {{#if otherDecrease}}checked{{/if}}>
+      <span>
+        <strong>{{ localize "ARS.RestSettings.OtherDecrease" }}</strong>
+        <small>{{ localize "ARS.RestSettings.OtherDecreaseHint" }}</small>
+      </span>
+    </label>
+    <label>
+      <input type="radio" name="otherAddictions" value="unchanged" {{#if otherUnchanged}}checked{{/if}}>
+      <span>
+        <strong>{{ localize "ARS.RestSettings.OtherUnchanged" }}</strong>
+        <small>{{ localize "ARS.RestSettings.OtherUnchangedHint" }}</small>
+      </span>
+    </label>
+  </div>
+
   <footer>
     <button type="button" data-action="save">
       <i class="fa-solid fa-floppy-disk" inert></i>

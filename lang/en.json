@@ -23,7 +23,7 @@
       "Die": "Sobriety Die",
       "Status": "Status",
       "Incurable": "Cannot be resolved through recovery alone",
-      "IncurableHint": "This addiction cannot be automatically marked recovered by downtime alone.",
+      "IncurableHint": "Automatic increases and decreases of this Sobriety Die are locked. Only the GM can change its size.",
       "Triggers": "Sobriety Triggers",
       "Notes": "GM notes",
       "History": "History entries"
@@ -43,7 +43,8 @@
       "recovered": "Recovery completed",
       "maximum": "Maximum Sobriety Die maintained",
       "improved": "Sobriety Die improved",
-      "minimum": "Minimum Sobriety Die maintained"
+      "minimum": "Minimum Sobriety Die maintained",
+      "locked": "Sobriety Die locked — GM control only"
     },
     "Trigger": {
       "Label": "Sobriety Trigger",
@@ -92,6 +93,12 @@
       "AllHint": "Selecting Addiction Recovery during a Long Rest affects every active addiction on that character.",
       "Specific": "One addiction chosen during Long Rest",
       "SpecificHint": "The player chooses one of their character's active addictions in the Long Rest dialog. Only that addiction benefits from recovery.",
+      "OtherAddictions": "When one addiction is selected",
+      "OtherAddictionsHint": "Choose what happens to the character's other active addictions during that Long Rest.",
+      "OtherDecrease": "Treat the others as not selected and reduce their dice",
+      "OtherDecreaseHint": "Every other active addiction loses the configured number of die steps. Addictions locked for GM-only die control remain unchanged.",
+      "OtherUnchanged": "Do not reduce the other addictions",
+      "OtherUnchangedHint": "Only the selected addiction is processed. Every other active addiction keeps its current Sobriety Die.",
       "Save": "Save Long Rest settings",
       "Saved": "Long Rest recovery scope saved."
     },
@@ -113,6 +120,7 @@
       "Saved": "Addiction Recovery data saved.",
       "TriggerSent": "Sobriety Trigger sent to the character and GM.",
       "TriggerAlreadyResolved": "This Sobriety Trigger has already been resolved.",
+      "ManualRollGMOnly": "Only the GM can make a manual Sobriety Die roll. Players roll from a Sobriety Trigger prompt.",
       "VersionWarning": "Addiction Recovery System was built for Foundry VTT 13 build 351 and dnd5e 5.3.3. Other versions are not supported by this release."
     },
     "Settings": {
@@ -165,7 +173,7 @@
       "longRestRecoveryConfig": {
         "Name": "Long Rest recovery scope",
         "Label": "Configure recovery scope",
-        "Hint": "Choose whether Long Rest recovery affects all active addictions or one addiction selected by the player during the rest."
+        "Hint": "Choose whether recovery affects all active addictions or one selected by the player, and whether the other addictions lose a die step."
       }
     }
   }

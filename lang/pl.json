@@ -23,7 +23,7 @@
       "Die": "Sobriety Die",
       "Status": "Status",
       "Incurable": "Niewyleczalne samym odwykiem",
-      "IncurableHint": "To uzależnienie nie może zostać automatycznie oznaczone jako wyleczone wyłącznie dzięki okresom odwyku.",
+      "IncurableHint": "Automatyczne zwiększanie i zmniejszanie tej Sobriety Die jest zablokowane. Jej rozmiar może zmienić wyłącznie GM.",
       "Triggers": "Sobriety Triggers",
       "Notes": "Notatki GM",
       "History": "Wpisy w historii"
@@ -43,7 +43,8 @@
       "recovered": "Zdrowienie zakończone",
       "maximum": "Utrzymano maksymalną Sobriety Die",
       "improved": "Sobriety Die została zwiększona",
-      "minimum": "Utrzymano minimalną Sobriety Die"
+      "minimum": "Utrzymano minimalną Sobriety Die",
+      "locked": "Rozmiar Sobriety Die zablokowany — kontroluje go GM"
     },
     "Trigger": {
       "Label": "Sobriety Trigger",
@@ -92,6 +93,12 @@
       "AllHint": "Wybranie Addiction Recovery podczas Long Rest wpływa na wszystkie aktywne uzależnienia tej postaci.",
       "Specific": "Jedno uzależnienie wybrane podczas Long Rest",
       "SpecificHint": "Gracz wybiera w oknie Long Rest jedno aktywne uzależnienie swojej postaci. Tylko ono korzysta ze zdrowienia.",
+      "OtherAddictions": "Gdy wybrano jedno uzależnienie",
+      "OtherAddictionsHint": "Wybierz, co podczas tego Long Rest dzieje się z pozostałymi aktywnymi uzależnieniami postaci.",
+      "OtherDecrease": "Traktuj pozostałe jako niewybrane i zmniejsz ich kości",
+      "OtherDecreaseHint": "Każde pozostałe aktywne uzależnienie traci skonfigurowaną liczbę stopni kości. Uzależnienia z kością zablokowaną do edycji GM-a pozostają bez zmian.",
+      "OtherUnchanged": "Nie zmniejszaj pozostałych uzależnień",
+      "OtherUnchangedHint": "Mechanika obejmuje tylko wybrane uzależnienie. Pozostałe aktywne uzależnienia zachowują aktualną Sobriety Die.",
       "Save": "Zapisz ustawienia Long Rest",
       "Saved": "Zapisano zakres zdrowienia podczas Long Rest."
     },
@@ -113,6 +120,7 @@
       "Saved": "Zapisano dane Addiction Recovery.",
       "TriggerSent": "Sobriety Trigger wysłano do postaci i GM-a.",
       "TriggerAlreadyResolved": "Ten Sobriety Trigger został już rozstrzygnięty.",
+      "ManualRollGMOnly": "Tylko GM może wykonać ręczny rzut Sobriety Die. Gracz wykonuje rzut z komunikatu Sobriety Trigger.",
       "VersionWarning": "Addiction Recovery System został przygotowany dla Foundry VTT 13 build 351 i dnd5e 5.3.3. Ta wersja modułu nie obsługuje innych wersji."
     },
     "Settings": {
@@ -165,7 +173,7 @@
       "longRestRecoveryConfig": {
         "Name": "Zakres zdrowienia podczas Long Rest",
         "Label": "Skonfiguruj zakres zdrowienia",
-        "Hint": "Wybierz, czy zdrowienie podczas Long Rest obejmuje wszystkie aktywne uzależnienia, czy jedno wybrane przez gracza podczas odpoczynku."
+        "Hint": "Wybierz, czy zdrowienie obejmuje wszystkie aktywne uzależnienia, czy jedno wybrane przez gracza, oraz czy pozostałe tracą stopień kości."
       }
     }
   }

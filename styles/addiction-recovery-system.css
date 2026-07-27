@@ -637,21 +637,9 @@ details[open] > summary .ars-chevron {
 .ars-roll-dialog-die > .ars-polyhedral-die {
   width: 92px;
   height: 92px;
-  color: #d9d5d6;
   filter: drop-shadow(0 5px 7px rgba(0, 0, 0, 0.45));
-  overflow: visible;
-}
-
-.ars-polyhedral-die .ars-die-shell {
-  fill: currentColor;
-}
-
-.ars-polyhedral-die .ars-die-line {
-  fill: none;
-  stroke: #251920;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 4;
+  object-fit: contain;
+  opacity: 1;
 }
 
 .ars-roll-dialog-die > strong {
@@ -750,6 +738,17 @@ details[open] > summary .ars-chevron {
 .ars-rest-settings-mode > label small {
   color: var(--color-text-dark-secondary);
   line-height: 1.35;
+}
+
+.ars-rest-settings-other > p {
+  margin: 0 0 2px;
+  color: var(--color-text-dark-secondary);
+  font-size: var(--font-size-12);
+  line-height: 1.35;
+}
+
+.ars-rest-settings-other[hidden] {
+  display: none;
 }
 
 .ars-rest-settings-layout > footer {
@@ -907,6 +906,15 @@ details[open] > summary .ars-chevron {
 .ars-outcome-relapse .ars-outcome-banner {
   border-left-color: var(--color-level-error);
   background: color-mix(in srgb, var(--color-level-error) 12%, transparent);
+}
+
+.ars-outcome-locked .ars-outcome-banner {
+  border-left-color: var(--ars-gold);
+  background: color-mix(in srgb, var(--ars-gold) 12%, transparent);
+}
+
+.ars-outcome-locked .ars-outcome-banner > i {
+  color: var(--ars-gold);
 }
 
 .ars-outcome-reduced .ars-outcome-banner > i,

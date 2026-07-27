@@ -39,6 +39,24 @@ assert.equal(resolveSobrietyRoll({ die: 4, status: "recovery" }, 1, {
   relapseOnMinimumFailure: true
 }).outcome, "relapse");
 
+assert.deepEqual(resolveSobrietyRoll({
+  die: 12,
+  status: "recovery",
+  incurable: true
+}, 1, {
+  ladder,
+  maintainThreshold: 2,
+  triggerDropSteps: 1,
+  relapseOnMinimumFailure: true
+}), {
+  before: 12,
+  after: 12,
+  status: "recovery",
+  failed: true,
+  naturalOne: true,
+  outcome: "locked"
+});
+
 assert.equal(resolveRecovery({ die: 10, status: "recovery" }, true, {
   ladder,
   recoveryGainSteps: 1,
@@ -62,6 +80,30 @@ assert.equal(resolveRecovery({ die: 20, status: "recovery", incurable: true }, t
   recoveryGainSteps: 1,
   completeAtMaximum: true
 }).status, "recovery");
+assert.deepEqual(resolveRecovery({
+  die: 10,
+  status: "recovery",
+  incurable: true
+}, true, {
+  ladder,
+  recoveryGainSteps: 1,
+  uncheckedBehavior: "none"
+}), {
+  before: 10,
+  after: 10,
+  status: "recovery",
+  outcome: "locked",
+  selected: true
+});
+assert.equal(resolveRecovery({
+  die: 10,
+  status: "recovery",
+  incurable: true
+}, false, {
+  ladder,
+  recoveryGainSteps: 1,
+  uncheckedBehavior: "decrease"
+}).after, 10);
 
 assert.equal(resolveRecovery({ die: 20, status: "recovery", incurable: false }, true, {
   ladder,
