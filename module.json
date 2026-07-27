@@ -1,0 +1,47 @@
+{
+  "id": "addiction-recovery-system",
+  "title": "Addiction Recovery System",
+  "description": "Tools for running the Addiction Recovery System with Sobriety Dice, Triggers, downtime recovery, character-sheet tracking, and GM controls.",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "YarpenArt"
+    }
+  ],
+  "esmodules": [
+    "scripts/main.mjs"
+  ],
+  "styles": [
+    "styles/addiction-recovery-system.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    },
+    {
+      "lang": "pl",
+      "name": "Polski",
+      "path": "lang/pl.json"
+    }
+  ],
+  "compatibility": {
+    "minimum": "13.351",
+    "verified": "13.351",
+    "maximum": "13.351"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "compatibility": {
+          "minimum": "5.3.3",
+          "verified": "5.3.3",
+          "maximum": "5.3.3"
+        }
+      }
+    ]
+  }
+}

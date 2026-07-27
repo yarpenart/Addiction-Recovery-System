@@ -1,0 +1,145 @@
+{
+  "ARS": {
+    "Safety": {
+      "ContentWarning": "Ostrzeżenie dotyczące treści: moduł porusza temat uzależnienia, zdrowienia, trzeźwości i nawrotu. Gracz ma ostateczne prawo decydować o Sobriety Triggers swojej postaci oraz o sposobie przedstawienia zdrowienia lub nawrotu."
+    },
+    "Manager": {
+      "Title": "Addiction Recovery — panel GM",
+      "SearchPlaceholder": "Wyszukaj postać...",
+      "Token": "token",
+      "Actor": "aktor",
+      "AddictionCount": "Liczba uzależnień",
+      "OpenSheet": "Otwórz kartę",
+      "Add": "Dodaj uzależnienie",
+      "NoAddictions": "Ta postać nie jest obecnie oznaczona jako uzależniona.",
+      "Delete": "Usuń",
+      "DeleteWarning": "Spowoduje to trwałe usunięcie tego uzależnienia i jego lokalnej historii z postaci.",
+      "Save": "Zapisz wszystko",
+      "SaveTriggers": "Zapisz Triggery"
+    },
+    "Addiction": {
+      "DefaultName": "Uzależnienie",
+      "Name": "Nazwa uzależnienia",
+      "Die": "Sobriety Die",
+      "Status": "Status",
+      "Incurable": "Niewyleczalne samym odwykiem",
+      "IncurableHint": "To uzależnienie nie może zostać automatycznie oznaczone jako wyleczone wyłącznie dzięki okresom odwyku.",
+      "Triggers": "Sobriety Triggers",
+      "Notes": "Notatki GM",
+      "History": "Wpisy w historii"
+    },
+    "Status": {
+      "recovery": "W trakcie zdrowienia",
+      "relapse": "Nawrót",
+      "recovered": "Wyleczone",
+      "inactive": "Obecnie bez trzeźwości"
+    },
+    "Outcome": {
+      "maintained": "Sobriety Die pozostaje bez zmian",
+      "reduced": "Sobriety Die została zmniejszona",
+      "relapse": "Rozpoczyna się wydarzenie nawrotu",
+      "unchanged": "Bez zmian",
+      "reentered": "Rozpoczęcie lub powrót do zdrowienia",
+      "recovered": "Zdrowienie zakończone",
+      "maximum": "Utrzymano maksymalną Sobriety Die",
+      "improved": "Sobriety Die została zwiększona",
+      "minimum": "Utrzymano minimalną Sobriety Die"
+    },
+    "Trigger": {
+      "Label": "Sobriety Trigger",
+      "InputPlaceholder": "Trigger obecny w scenie (opcjonalnie)",
+      "Send": "Wyślij Trigger",
+      "PromptTitle": "Sobriety Trigger",
+      "PromptHint": "Pojawił się Sobriety Trigger. Wybierz sposób rzutu aktualną Sobriety Die.",
+      "Unspecified": "Pojawił się Sobriety Trigger",
+      "Resolved": "Rzut dla tego Triggera został rozstrzygnięty.",
+      "Manual": "Ręczny rzut Sobriety Die"
+    },
+    "Roll": {
+      "RollMode": "Tryb rzutu",
+      "Mode": "Rzut",
+      "Result": "Wynik",
+      "normal": "Normalnie",
+      "advantage": "Z przewagą",
+      "disadvantage": "Z utrudnieniem"
+    },
+    "Sheet": {
+      "Title": "Addiction Recovery"
+    },
+    "Rest": {
+      "Title": "Addiction Recovery",
+      "Checkbox": "Poświęć ten downtime na pracę nad trzeźwością",
+      "Hint": "Po zaznaczeniu Sobriety Die każdego uzależnienia wzrasta o skonfigurowaną liczbę stopni. Postać po nawrocie rozpoczyna lub ponownie podejmuje zdrowienie z najniższą kością.",
+      "Choice": "Wybór podczas downtime",
+      "Selected": "Praca nad trzeźwością",
+      "NotSelected": "Nie wybrano pracy nad zdrowieniem"
+    },
+    "Panel": {
+      "Title": "Addiction Recovery",
+      "Characters": "Postacie",
+      "Trigger": "Trigger",
+      "Settings": "Ustawienia",
+      "Lock": "Zablokuj pozycję",
+      "Unlock": "Odblokuj pozycję",
+      "Minimize": "Zwiń",
+      "Expand": "Rozwiń"
+    },
+    "Notifications": {
+      "NoPermission": "Nie masz uprawnień do wykonania rzutu dla tej postaci.",
+      "MissingAddiction": "To uzależnienie już nie istnieje.",
+      "NotInRecovery": "Sobriety Die można rzucać tylko wtedy, gdy postać jest w trakcie zdrowienia.",
+      "GMOnly": "Tylko GM może wysłać komunikat Sobriety Trigger.",
+      "Saved": "Zapisano dane Addiction Recovery.",
+      "TriggerSent": "Sobriety Trigger wysłano do postaci i GM-a.",
+      "VersionWarning": "Addiction Recovery System został przygotowany dla Foundry VTT 13 build 351 i dnd5e 5.3.3. Ta wersja modułu nie obsługuje innych wersji."
+    },
+    "Settings": {
+      "dieLadder": {
+        "Name": "Drabinka Sobriety Die",
+        "Hint": "Rozmiary kości oddzielone przecinkami, od najsłabszej do najsilniejszej. Domyślnie: 4, 6, 8, 10, 12, 20."
+      },
+      "maintainThreshold": {
+        "Name": "Próg utrzymania trzeźwości",
+        "Hint": "Wynik równy lub wyższy zachowuje aktualną Sobriety Die. Domyślnie: 2."
+      },
+      "triggerDropSteps": {
+        "Name": "Porażka Triggera — utracone stopnie kości",
+        "Hint": "O ile pozycji spada Sobriety Die po nieudanym rzucie Triggera. Domyślnie: 1."
+      },
+      "recoveryGainSteps": {
+        "Name": "Downtime na zdrowienie — zyskane stopnie kości",
+        "Hint": "O ile pozycji rośnie Sobriety Die po wybraniu pracy nad zdrowieniem podczas downtime. Domyślnie: 1."
+      },
+      "relapseOnMinimumFailure": {
+        "Name": "Nawrót po porażce na minimalnej kości",
+        "Hint": "Gdy opcja jest włączona, nieudany rzut Triggera na najniższej Sobriety Die rozpoczyna wydarzenie nawrotu."
+      },
+      "uncheckedBehavior": {
+        "Name": "Long Rest bez wybrania zdrowienia",
+        "Hint": "Określa, czy niezaznaczenie Addiction Recovery nie zmienia kości, czy zmniejsza każdą aktywną Sobriety Die."
+      },
+      "UncheckedNone": "Bez zmian",
+      "UncheckedDecrease": "Zmniejsz Sobriety Die",
+      "completeAtMaximum": {
+        "Name": "Zakończ zdrowienie ponad maksymalną kość",
+        "Hint": "Opcjonalna zasada domowa: kolejne polepszenie na maksymalnej kości oznacza uleczalne uzależnienie jako wyleczone. Domyślnie wyłączone, aby zachować oryginalne zasady."
+      },
+      "playersEditTriggers": {
+        "Name": "Gracze mogą edytować Sobriety Triggers",
+        "Hint": "Pozwala właścicielom postaci edytować opisy Triggerów w zakładce Inventory. GM zawsze może je edytować."
+      },
+      "defaultRollMode": {
+        "Name": "Domyślny tryb rzutu",
+        "Hint": "Domyślna widoczność rzutów Sobriety Die. Można ją zmienić przed każdym rzutem."
+      },
+      "historyLimit": {
+        "Name": "Wpisy historii na uzależnienie",
+        "Hint": "Maksymalna liczba zachowanych wydarzeń Triggerów i zdrowienia dla jednego uzależnienia. Wartość 0 wyłącza historię."
+      },
+      "showQuickPanel": {
+        "Name": "Pokaż ruchomy panel GM",
+        "Hint": "Wyświetla ruchomy i możliwy do zablokowania panel skrótów Addiction Recovery dla GM-a."
+      }
+    }
+  }
+}

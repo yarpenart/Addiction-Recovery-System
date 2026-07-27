@@ -1,0 +1,145 @@
+{
+  "ARS": {
+    "Safety": {
+      "ContentWarning": "Content warning: this module discusses addiction, recovery, sobriety, and relapse. The player has final authority over their character's Sobriety Triggers and how recovery or relapse is portrayed."
+    },
+    "Manager": {
+      "Title": "Addiction Recovery — GM Manager",
+      "SearchPlaceholder": "Search characters...",
+      "Token": "token",
+      "Actor": "actor",
+      "AddictionCount": "Number of addictions",
+      "OpenSheet": "Open sheet",
+      "Add": "Add addiction",
+      "NoAddictions": "This character is not currently marked as having an addiction.",
+      "Delete": "Delete",
+      "DeleteWarning": "This permanently removes this addiction and its local history from the character.",
+      "Save": "Save all",
+      "SaveTriggers": "Save Triggers"
+    },
+    "Addiction": {
+      "DefaultName": "Addiction",
+      "Name": "Addiction name",
+      "Die": "Sobriety Die",
+      "Status": "Status",
+      "Incurable": "Cannot be resolved through recovery alone",
+      "IncurableHint": "This addiction cannot be automatically marked recovered by downtime alone.",
+      "Triggers": "Sobriety Triggers",
+      "Notes": "GM notes",
+      "History": "History entries"
+    },
+    "Status": {
+      "recovery": "In recovery",
+      "relapse": "Relapse",
+      "recovered": "Recovered",
+      "inactive": "Not currently sober"
+    },
+    "Outcome": {
+      "maintained": "Sobriety Die maintained",
+      "reduced": "Sobriety Die reduced",
+      "relapse": "Relapse event begins",
+      "unchanged": "No change",
+      "reentered": "Entered or re-entered recovery",
+      "recovered": "Recovery completed",
+      "maximum": "Maximum Sobriety Die maintained",
+      "improved": "Sobriety Die improved",
+      "minimum": "Minimum Sobriety Die maintained"
+    },
+    "Trigger": {
+      "Label": "Sobriety Trigger",
+      "InputPlaceholder": "Trigger present in the scene (optional)",
+      "Send": "Send Trigger",
+      "PromptTitle": "Sobriety Trigger",
+      "PromptHint": "A Sobriety Trigger is present. Choose how to roll your current Sobriety Die.",
+      "Unspecified": "A Sobriety Trigger is present",
+      "Resolved": "This Trigger roll has been resolved.",
+      "Manual": "Manual Sobriety Die roll"
+    },
+    "Roll": {
+      "RollMode": "Roll mode",
+      "Mode": "Roll",
+      "Result": "Result",
+      "normal": "Normal",
+      "advantage": "Advantage",
+      "disadvantage": "Disadvantage"
+    },
+    "Sheet": {
+      "Title": "Addiction Recovery"
+    },
+    "Rest": {
+      "Title": "Addiction Recovery",
+      "Checkbox": "Use this downtime to work on sobriety",
+      "Hint": "When selected, each addiction improves its Sobriety Die by the configured number of steps. A character in relapse enters or re-enters recovery at the lowest die.",
+      "Choice": "Downtime choice",
+      "Selected": "Worked on sobriety",
+      "NotSelected": "Did not select recovery work"
+    },
+    "Panel": {
+      "Title": "Addiction Recovery",
+      "Characters": "Characters",
+      "Trigger": "Trigger",
+      "Settings": "Settings",
+      "Lock": "Lock position",
+      "Unlock": "Unlock position",
+      "Minimize": "Minimize",
+      "Expand": "Expand"
+    },
+    "Notifications": {
+      "NoPermission": "You do not have permission to roll for this character.",
+      "MissingAddiction": "This addiction no longer exists.",
+      "NotInRecovery": "The Sobriety Die can only be rolled while the character is in recovery.",
+      "GMOnly": "Only the GM can send a Sobriety Trigger prompt.",
+      "Saved": "Addiction Recovery data saved.",
+      "TriggerSent": "Sobriety Trigger sent to the character and GM.",
+      "VersionWarning": "Addiction Recovery System was built for Foundry VTT 13 build 351 and dnd5e 5.3.3. Other versions are not supported by this release."
+    },
+    "Settings": {
+      "dieLadder": {
+        "Name": "Sobriety Die ladder",
+        "Hint": "Comma-separated die sizes from weakest to strongest. Default: 4, 6, 8, 10, 12, 20."
+      },
+      "maintainThreshold": {
+        "Name": "Maintain Sobriety threshold",
+        "Hint": "A result at or above this number maintains the current Sobriety Die. Default: 2."
+      },
+      "triggerDropSteps": {
+        "Name": "Trigger failure — die steps lost",
+        "Hint": "How many positions the Sobriety Die drops after a failed Trigger roll. Default: 1."
+      },
+      "recoveryGainSteps": {
+        "Name": "Recovery downtime — die steps gained",
+        "Hint": "How many positions the Sobriety Die improves when recovery is selected during downtime. Default: 1."
+      },
+      "relapseOnMinimumFailure": {
+        "Name": "Relapse on a failed minimum die",
+        "Hint": "When enabled, failing a Trigger roll at the lowest Sobriety Die begins a relapse event."
+      },
+      "uncheckedBehavior": {
+        "Name": "Long Rest when recovery is not selected",
+        "Hint": "Choose whether leaving Addiction Recovery unchecked causes no change or reduces each active Sobriety Die."
+      },
+      "UncheckedNone": "No change",
+      "UncheckedDecrease": "Reduce the Sobriety Die",
+      "completeAtMaximum": {
+        "Name": "Complete recovery above the maximum die",
+        "Hint": "Optional homebrew: when enabled, another improvement while at the maximum die marks a curable addiction as Recovered. Disabled by default to preserve the original rules."
+      },
+      "playersEditTriggers": {
+        "Name": "Players may edit Sobriety Triggers",
+        "Hint": "Allows character owners to edit their own Trigger descriptions on the Inventory tab. The GM can always edit them."
+      },
+      "defaultRollMode": {
+        "Name": "Default roll mode",
+        "Hint": "Default visibility for Sobriety Die rolls. It can still be changed before each roll."
+      },
+      "historyLimit": {
+        "Name": "History entries per addiction",
+        "Hint": "Maximum number of Trigger and recovery events retained for each addiction. Set to 0 to disable history."
+      },
+      "showQuickPanel": {
+        "Name": "Show movable GM panel",
+        "Hint": "Shows the movable, lockable Addiction Recovery shortcut panel for GMs."
+      }
+    }
+  }
+}

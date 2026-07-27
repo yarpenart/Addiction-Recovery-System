@@ -1,0 +1,102 @@
+<section class="ars-manager-layout">
+  <div class="ars-safety-note">
+    <i class="fa-solid fa-triangle-exclamation" inert></i>
+    <p>{{ localize "ARS.Safety.ContentWarning" }}</p>
+  </div>
+
+  <label class="ars-search">
+    <i class="fa-solid fa-magnifying-glass" inert></i>
+    <input type="search" data-ars-search placeholder="{{ localize 'ARS.Manager.SearchPlaceholder' }}">
+  </label>
+
+  <div class="ars-actor-list">
+    {{#each actors}}
+    <details class="ars-actor-card {{#if addicted}}is-addicted{{/if}}" data-actor-id="{{ id }}" {{#if open}}open{{/if}}
+             data-search="{{ search }}">
+      <summary>
+        <img src="{{ img }}" alt="">
+        <span class="ars-actor-name">{{ name }}</span>
+        <span class="ars-source">{{ source }}</span>
+        {{#if addicted}}
+        <span class="ars-count" data-tooltip="{{ localize 'ARS.Manager.AddictionCount' }}">{{ addictionCount }}</span>
+        {{/if}}
+        <i class="fa-solid fa-chevron-down ars-chevron" inert></i>
+      </summary>
+
+      <div class="ars-actor-content">
+        <div class="ars-actor-toolbar">
+          <button type="button" data-action="openSheet">
+            <i class="fa-solid fa-address-card" inert></i> {{ localize "ARS.Manager.OpenSheet" }}
+          </button>
+          <button type="button" data-action="addAddiction">
+            <i class="fa-solid fa-plus" inert></i> {{ localize "ARS.Manager.Add" }}
+          </button>
+        </div>
+
+        {{#unless addictions.length}}
+        <p class="ars-empty">{{ localize "ARS.Manager.NoAddictions" }}</p>
+        {{/unless}}
+
+        {{#each addictions}}
+        <form class="ars-addiction-form" data-addiction-id="{{ id }}">
+          <div class="ars-form-grid">
+            <label class="span-2">
+              <span>{{ localize "ARS.Addiction.Name" }}</span>
+              <input type="text" name="name" value="{{ name }}">
+            </label>
+            <label>
+              <span>{{ localize "ARS.Addiction.Die" }}</span>
+              <select name="die">
+                {{#each dieOptions}}
+                <option value="{{ value }}" {{#if selected}}selected{{/if}}>d{{ value }}</option>
+                {{/each}}
+              </select>
+            </label>
+            <label>
+              <span>{{ localize "ARS.Addiction.Status" }}</span>
+              <select name="status">
+                {{#each statusOptions}}
+                <option value="{{ value }}" {{#if selected}}selected{{/if}}>{{ label }}</option>
+                {{/each}}
+              </select>
+            </label>
+            <label class="checkbox span-2">
+              <input type="checkbox" name="incurable" {{#if incurable}}checked{{/if}}>
+              <span>{{ localize "ARS.Addiction.Incurable" }}</span>
+            </label>
+            <label class="span-2">
+              <span>{{ localize "ARS.Addiction.Triggers" }}</span>
+              <textarea name="triggers" rows="4">{{ triggers }}</textarea>
+            </label>
+            <label class="span-2">
+              <span>{{ localize "ARS.Addiction.Notes" }}</span>
+              <textarea name="notes" rows="3">{{ notes }}</textarea>
+            </label>
+          </div>
+
+          <div class="ars-trigger-builder">
+            <input type="text" data-ars-trigger-text placeholder="{{ localize 'ARS.Trigger.InputPlaceholder' }}">
+            <button type="button" data-action="sendTrigger">
+              <i class="fa-solid fa-bell" inert></i> {{ localize "ARS.Trigger.Send" }}
+            </button>
+          </div>
+
+          <div class="ars-form-actions">
+            <span class="ars-history-count">
+              <i class="fa-solid fa-clock-rotate-left" inert></i>
+              {{ localize "ARS.Addiction.History" }}: {{ historyCount }}
+            </span>
+            <button type="button" class="danger" data-action="deleteAddiction">
+              <i class="fa-solid fa-trash" inert></i> {{ localize "ARS.Manager.Delete" }}
+            </button>
+            <button type="button" data-action="saveAddiction">
+              <i class="fa-solid fa-floppy-disk" inert></i> {{ localize "ARS.Manager.Save" }}
+            </button>
+          </div>
+        </form>
+        {{/each}}
+      </div>
+    </details>
+    {{/each}}
+  </div>
+</section>
