@@ -1,4 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="d20">
-  <path d="M50 3 84 18 97 52 82 84 50 97 18 84 3 52 16 18Z" fill="#d7d7d9" stroke="#171419" stroke-linejoin="round" stroke-width="3"/>
-  <path d="m50 3-21 31h42Zm0 0 21 31 13-16M29 34 16 18M3 52l26-18-11 50 32-30Zm94 0L71 34l11 50-32-30Zm-15 32H18m32 13V54" fill="none" stroke="#4b474d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+  <polygon points="50,3 18,17 50,23" fill="#d7d8db"/>
+  <polygon points="50,3 50,23 82,17" fill="#e7e7e9"/>
+  <polygon points="18,17 5,49 28,39 50,23" fill="#bec0c4"/>
+  <polygon points="82,17 50,23 72,39 95,49" fill="#d1d2d5"/>
+  <polygon points="50,23 28,39 50,62 72,39" fill="#dddddf"/>
+  <polygon points="5,49 17,82 30,76 28,39" fill="#a7a8ad"/>
+  <polygon points="28,39 30,76 50,62" fill="#b9babe"/>
+  <polygon points="72,39 50,62 70,76" fill="#c9cace"/>
+  <polygon points="72,39 70,76 83,82 95,49" fill="#afb0b5"/>
+  <polygon points="17,82 50,97 30,76" fill="#9d9ea3"/>
+  <polygon points="30,76 50,97 70,76 50,62" fill="#b4b5b9"/>
+  <polygon points="70,76 50,97 83,82" fill="#a7a8ac"/>
+  <path d="M50 3 82 17 95 49 83 82 50 97 17 82 5 49 18 17Zm0 0v20M18 17l32 6 32-6M5 49l23-10 22-16 22 16 23 10M5 49l12 33 13-6-2-37m67 10L83 82l-13-6 2-37M17 82l33 15 33-15M30 76l20-14 20 14M50 23v39m0 0v35" fill="none" stroke="#242126" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.05"/>
 </svg>

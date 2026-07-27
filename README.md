@@ -83,8 +83,8 @@ version tag is pushed.
 4. Create and push a matching tag, for example:
 
 ```bash
-git tag v0.1.6
-git push origin v0.1.6
+git tag v0.1.7
+git push origin v0.1.7
 ```
 
 The workflow verifies that the tag and manifest versions match, then publishes

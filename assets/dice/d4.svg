@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="d4">
-  <path d="M50 5 96 90H4Z" fill="#d7d7d9" stroke="#171419" stroke-linejoin="round" stroke-width="3"/>
-  <path d="M50 5v57M4 90l46-28 46 28" fill="none" stroke="#4b474d" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+  <polygon points="50,5 5,91 50,62" fill="#c7c8cc"/>
+  <polygon points="50,5 50,62 95,91" fill="#dedee1"/>
+  <polygon points="5,91 50,62 95,91" fill="#a9aaaf"/>
+  <path d="M50 5 95 91H5Zm0 0v57M5 91l45-29 45 29" fill="none" stroke="#242126" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
 </svg>
