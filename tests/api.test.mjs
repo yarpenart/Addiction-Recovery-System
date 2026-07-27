@@ -10,7 +10,8 @@ const settings = new Map([
   ["uncheckedBehavior", "none"],
   ["historyLimit", 50],
   ["defaultRollMode", "publicroll"],
-  ["playersEditTriggers", true]
+  ["playersEditTriggers", true],
+  ["longRestRecoveryTargets", { mode: "all" }]
 ]);
 
 let id = 0;
@@ -111,6 +112,9 @@ await api.updateAddiction(actor, secondAddiction.id, {
   die: 8
 });
 const targetedResult = { type: "long", updateData: {} };
+settings.set("longRestRecoveryTargets", {
+  mode: "specific"
+});
 const targetedSummaries = api.applyLongRestRecovery(actor, targetedResult, {
   addictionRecovery: true,
   addictionRecoveryTarget: addiction.id
@@ -120,6 +124,19 @@ assert.equal(targetedAddictions.find(entry => entry.id === addiction.id).die, 6)
 assert.equal(targetedAddictions.find(entry => entry.id === secondAddiction.id).die, 8);
 assert.equal(targetedSummaries.length, 1);
 assert.equal(targetedResult["addiction-recovery-system"].targetId, addiction.id);
+assert.equal(targetedResult["addiction-recovery-system"].targetName, "Test Addiction");
+
+const invalidTargetResult = { type: "long", updateData: {} };
+const invalidTargetSummaries = api.applyLongRestRecovery(actor, invalidTargetResult, {
+  addictionRecovery: true,
+  addictionRecoveryTarget: "missing-addiction"
+});
+assert.equal(invalidTargetSummaries.length, 0);
+assert.equal(
+  invalidTargetResult.updateData.flags["addiction-recovery-system"].data.addictions
+    .find(entry => entry.id === addiction.id).die,
+  4
+);
 
 const prompt = await api.createTriggerPrompt(actor, addiction.id, "Isolation");
 assert.match(prompt.content, /data-ars-open-roll/);

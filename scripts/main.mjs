@@ -5,12 +5,15 @@ import {
   canEditTriggers,
   createTriggerPrompt,
   getActorData,
+  getLongRestRecoveryConfig,
   getRules,
   localize,
   rollSobrietyDie,
   updateAddiction
 } from "./api.mjs";
+import { sobrietyDieIcon } from "./dice-icons.mjs";
 import { openManager, refreshManager } from "./manager.mjs";
+import { LongRestRecoverySettings } from "./rest-settings.mjs";
 
 const SOCKET = `module.${MODULE_ID}`;
 const openTriggerDialogs = new Set();
@@ -129,6 +132,24 @@ function registerSettings() {
       ...setting
     });
   }
+
+  game.settings.register(MODULE_ID, "longRestRecoveryTargets", {
+    scope: "world",
+    config: false,
+    type: Object,
+    default: {
+      mode: "all"
+    }
+  });
+
+  game.settings.registerMenu(MODULE_ID, "longRestRecoveryConfig", {
+    name: "ARS.Settings.longRestRecoveryConfig.Name",
+    label: "ARS.Settings.longRestRecoveryConfig.Label",
+    hint: "ARS.Settings.longRestRecoveryConfig.Hint",
+    icon: "fa-solid fa-bed",
+    type: LongRestRecoverySettings,
+    restricted: true
+  });
 
   game.settings.register(MODULE_ID, "showQuickPanel", {
     name: "ARS.Settings.showQuickPanel.Name",
@@ -277,46 +298,52 @@ function injectLongRestSection(app, element) {
   if ( actor?.type !== "character" ) return;
   const addictions = getActorData(actor).addictions.filter(addiction => addiction.status !== "recovered");
   if ( !addictions.length ) return;
+  const recoveryConfig = getLongRestRecoveryConfig();
+  const chooseSpecific = recoveryConfig.mode === "specific";
+  const targetControl = chooseSpecific ? `
+    <div class="ars-rest-target">
+      <label>
+        <span>${localize("Rest.SelectAddiction")}</span>
+        <select name="addictionRecoveryTarget">
+          ${addictions.map(addiction => `
+            <option value="${escape(addiction.id)}">${escape(addiction.name)} (d${addiction.die})</option>
+          `).join("")}
+        </select>
+      </label>
+      <p class="hint">${localize("Rest.SelectAddictionHint")}</p>
+    </div>` : `
+    <p class="hint ars-rest-configured-target">
+      <strong>${localize("Rest.ConfiguredTarget")}:</strong> ${localize("Rest.AllAddictions")}
+    </p>`;
 
   const fieldset = document.createElement("fieldset");
   fieldset.className = "ars-long-rest-section";
-  const targetOptions = [
-    `<option value="all">${localize("Rest.AllAddictions")}</option>`,
-    ...addictions.map(addiction => (
-      `<option value="${escape(addiction.id)}">${escape(addiction.name)} — d${addiction.die}</option>`
-    ))
-  ].join("");
   fieldset.innerHTML = `
     <legend>${localize("Rest.Title")}</legend>
     <div class="form-group">
       <label class="checkbox">
-        <input type="checkbox" name="addictionRecovery" value="true" data-ars-rest-recovery>
+        <input type="checkbox" name="addictionRecovery" value="true">
         <span>${localize("Rest.Checkbox")}</span>
       </label>
-      <p class="hint">${localize("Rest.Hint")}</p>
+      <p class="hint">${localize(chooseSpecific ? "Rest.HintSpecific" : "Rest.HintAll")}</p>
+      ${targetControl}
     </div>
-    ${game.user.isGM ? `
-      <div class="form-group ars-rest-target">
-        <label>
-          <span>${localize("Rest.Target")}</span>
-          <select name="addictionRecoveryTarget" data-ars-rest-target disabled>
-            ${targetOptions}
-          </select>
-        </label>
-        <p class="hint">${localize("Rest.TargetHint")}</p>
-      </div>` : `
-      <input type="hidden" name="addictionRecoveryTarget" value="all">`}`;
+  `;
   const section = element.querySelector("[data-application-part='content'] > section, section.flexcol");
   const request = [...section?.querySelectorAll(":scope > fieldset") ?? []]
     .find(candidate => candidate.querySelector("[name='autoRest'], [name^='targets.']"));
   if ( request ) request.insertAdjacentElement("beforebegin", fieldset);
   else section?.append(fieldset);
 
-  const recoveryCheckbox = fieldset.querySelector("[data-ars-rest-recovery]");
-  const targetSelect = fieldset.querySelector("[data-ars-rest-target]");
-  recoveryCheckbox?.addEventListener("change", () => {
-    if ( targetSelect ) targetSelect.disabled = !recoveryCheckbox.checked;
-  });
+  if ( chooseSpecific ) {
+    const checkbox = fieldset.querySelector("[name='addictionRecovery']");
+    const target = fieldset.querySelector(".ars-rest-target");
+    const updateTargetState = () => {
+      target?.classList.toggle("is-disabled", !checkbox?.checked);
+    };
+    checkbox?.addEventListener("change", updateTargetState);
+    updateTargetState();
+  }
 }
 
 async function appendRestSummary(actor, result) {
@@ -337,7 +364,9 @@ async function appendRestSummary(actor, result) {
     <section class="ars-rest-summary">
       <h3><i class="fa-solid fa-heart-pulse" inert></i> ${localize("Rest.Title")}</h3>
       <p><strong>${localize("Rest.Choice")}:</strong> ${selection}</p>
-      ${recovery.selected ? `<p><strong>${localize("Rest.Target")}:</strong> ${escape(target)}</p>` : ""}
+      ${recovery.selected && target
+        ? `<p><strong>${localize("Rest.Target")}:</strong> ${escape(target)}</p>`
+        : ""}
       <ul>${rows}</ul>
     </section>`;
   await result.message.update({ content: `${result.message.content}${addition}` });
@@ -403,7 +432,7 @@ async function openTriggerRollDialog(payload) {
         </div>
       </div>
       <div class="ars-roll-dialog-die" aria-label="${escape(localize("Addiction.Die"))}: d${addiction.die}">
-        <i class="fa-solid fa-dice-d20" inert></i>
+        ${sobrietyDieIcon(addiction.die)}
         <strong>d${addiction.die}</strong>
       </div>
       <div class="ars-roll-dialog-formula">

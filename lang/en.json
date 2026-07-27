@@ -74,13 +74,26 @@
     "Rest": {
       "Title": "Addiction Recovery",
       "Checkbox": "Use this downtime to work on sobriety",
-      "Hint": "When selected, each addiction improves its Sobriety Die by the configured number of steps. A character in relapse enters or re-enters recovery at the lowest die.",
+      "HintAll": "When selected, every active addiction improves its Sobriety Die by the configured number of steps. A character in relapse enters or re-enters recovery at the lowest die.",
+      "HintSpecific": "When selected, the addiction chosen below improves its Sobriety Die by the configured number of steps. A character in relapse enters or re-enters recovery at the lowest die.",
       "Choice": "Downtime choice",
       "Target": "Recovery focus",
       "AllAddictions": "All addictions",
-      "TargetHint": "GM: improve every addiction or focus this downtime on one specific addiction.",
+      "ConfiguredTarget": "Configured recovery focus",
+      "SelectAddiction": "Addiction to work on",
+      "SelectAddictionHint": "Choose which one of this character's active addictions benefits from recovery during this Long Rest.",
       "Selected": "Worked on sobriety",
       "NotSelected": "Did not select recovery work"
+    },
+    "RestSettings": {
+      "Title": "Long Rest Recovery Targets",
+      "Mode": "Long Rest recovery scope",
+      "All": "All addictions",
+      "AllHint": "Selecting Addiction Recovery during a Long Rest affects every active addiction on that character.",
+      "Specific": "One addiction chosen during Long Rest",
+      "SpecificHint": "The player chooses one of their character's active addictions in the Long Rest dialog. Only that addiction benefits from recovery.",
+      "Save": "Save Long Rest settings",
+      "Saved": "Long Rest recovery scope saved."
     },
     "Panel": {
       "Title": "Addiction Recovery",
@@ -148,6 +161,11 @@
       "showQuickPanel": {
         "Name": "Show movable GM panel",
         "Hint": "Shows the movable, lockable Addiction Recovery shortcut panel for GMs."
+      },
+      "longRestRecoveryConfig": {
+        "Name": "Long Rest recovery scope",
+        "Label": "Configure recovery scope",
+        "Hint": "Choose whether Long Rest recovery affects all active addictions or one addiction selected by the player during the rest."
       }
     }
   }

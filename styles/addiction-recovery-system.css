@@ -379,6 +379,11 @@ details[open] > summary .ars-chevron {
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid var(--color-border-light-2);
+  transition: opacity 120ms ease;
+}
+
+.ars-long-rest-section .ars-rest-target.is-disabled {
+  opacity: 0.55;
 }
 
 .ars-long-rest-section .ars-rest-target label {
@@ -629,10 +634,24 @@ details[open] > summary .ars-chevron {
   place-items: center;
 }
 
-.ars-roll-dialog-die > i {
+.ars-roll-dialog-die > .ars-polyhedral-die {
+  width: 92px;
+  height: 92px;
   color: #d9d5d6;
-  font-size: 88px;
   filter: drop-shadow(0 5px 7px rgba(0, 0, 0, 0.45));
+  overflow: visible;
+}
+
+.ars-polyhedral-die .ars-die-shell {
+  fill: currentColor;
+}
+
+.ars-polyhedral-die .ars-die-line {
+  fill: none;
+  stroke: #251920;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
 }
 
 .ars-roll-dialog-die > strong {
@@ -677,6 +696,71 @@ details[open] > summary .ars-chevron {
 .ars-roll-dialog-trigger strong {
   color: #eee;
   font-size: var(--font-size-12);
+}
+
+.ars-rest-configured-target {
+  margin-top: 8px;
+  color: var(--ars-gold);
+}
+
+.ars-rest-no-target {
+  margin-top: 8px;
+  color: #d99191;
+}
+
+.ars-rest-settings .window-content {
+  overflow: hidden;
+}
+
+.ars-rest-settings-layout {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ars-rest-settings-mode {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--ars-border);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.ars-rest-settings-mode h3 {
+  margin: 0 0 2px;
+  color: var(--ars-gold);
+  font-size: var(--font-size-14);
+}
+
+.ars-rest-settings-mode > label {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  cursor: pointer;
+}
+
+.ars-rest-settings-mode > label span {
+  display: grid;
+  gap: 2px;
+}
+
+.ars-rest-settings-mode > label small {
+  color: var(--color-text-dark-secondary);
+  line-height: 1.35;
+}
+
+.ars-rest-settings-layout > footer {
+  display: flex;
+  margin-top: auto;
+  justify-content: flex-end;
+  padding-top: 2px;
+}
+
+.ars-rest-settings-layout > footer button {
+  flex: 0 0 auto;
 }
 
 .ars-roll-dialog-content fieldset {

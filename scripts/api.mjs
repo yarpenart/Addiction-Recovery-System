@@ -39,6 +39,30 @@ export function getRules() {
   };
 }
 
+export function getLongRestRecoveryConfig() {
+  const stored = game.settings.get(MODULE_ID, "longRestRecoveryTargets");
+  const mode = stored?.mode === "specific" ? "specific" : "all";
+  return { mode };
+}
+
+export function getLongRestRecoveryTarget(actor, addictionId=null) {
+  const activeAddictions = getActorData(actor).addictions
+    .filter(addiction => addiction.status !== "recovered");
+  const config = getLongRestRecoveryConfig();
+  if ( config.mode === "all" ) {
+    return {
+      mode: "all",
+      addictions: activeAddictions
+    };
+  }
+
+  const selectedId = String(addictionId ?? "");
+  return {
+    mode: "specific",
+    addictions: activeAddictions.filter(addiction => addiction.id === selectedId)
+  };
+}
+
 export function getActorData(actor) {
   const source = actor?.getFlag(MODULE_ID, FLAG_KEY);
   const rules = getRules();
@@ -294,19 +318,27 @@ export function applyLongRestRecovery(actor, result, config) {
   const data = getActorData(actor);
   if ( !data.addictions.length ) return [];
   const selected = config.addictionRecovery === true || config.addictionRecovery === "true";
-  const requestedTarget = String(config.addictionRecoveryTarget ?? "all");
-  const targetId = selected && data.addictions.some(addiction => addiction.id === requestedTarget)
-    ? requestedTarget
-    : "all";
-  const targetName = targetId === "all"
-    ? null
-    : data.addictions.find(addiction => addiction.id === targetId)?.name ?? null;
+  const recoveryConfig = getLongRestRecoveryConfig();
+  const requestedAddictionId = selected && recoveryConfig.mode === "specific"
+    ? String(config.addictionRecoveryTarget ?? "")
+    : null;
+  const target = selected
+    ? getLongRestRecoveryTarget(actor, requestedAddictionId)
+    : {
+        mode: "all",
+        addictions: data.addictions.filter(addiction => addiction.status !== "recovered")
+      };
+  const targetIds = new Set(target.addictions.map(addiction => addiction.id));
+  const targetId = target.mode === "all" ? "all" : target.addictions[0]?.id ?? null;
+  const targetName = target.mode === "specific"
+    ? target.addictions[0]?.name ?? null
+    : null;
   const rules = getRules();
   const summaries = [];
 
   data.addictions = data.addictions.map(addiction => {
     if ( addiction.status === "recovered" ) return addiction;
-    if ( selected && targetId !== "all" && addiction.id !== targetId ) return addiction;
+    if ( selected && !targetIds.has(addiction.id) ) return addiction;
     const resolution = resolveRecovery(addiction, selected, rules);
     summaries.push({
       id: addiction.id,

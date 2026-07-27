@@ -1,0 +1,26 @@
+<section class="ars-rest-settings-layout">
+  <div class="ars-rest-settings-mode">
+    <h3>{{ localize "ARS.RestSettings.Mode" }}</h3>
+    <label>
+      <input type="radio" name="mode" value="all" {{#if modeAll}}checked{{/if}}>
+      <span>
+        <strong>{{ localize "ARS.RestSettings.All" }}</strong>
+        <small>{{ localize "ARS.RestSettings.AllHint" }}</small>
+      </span>
+    </label>
+    <label>
+      <input type="radio" name="mode" value="specific" {{#if modeSpecific}}checked{{/if}}>
+      <span>
+        <strong>{{ localize "ARS.RestSettings.Specific" }}</strong>
+        <small>{{ localize "ARS.RestSettings.SpecificHint" }}</small>
+      </span>
+    </label>
+  </div>
+
+  <footer>
+    <button type="button" data-action="save">
+      <i class="fa-solid fa-floppy-disk" inert></i>
+      {{ localize "ARS.RestSettings.Save" }}
+    </button>
+  </footer>
+</section>

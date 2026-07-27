@@ -74,13 +74,26 @@
     "Rest": {
       "Title": "Addiction Recovery",
       "Checkbox": "Poświęć ten downtime na pracę nad trzeźwością",
-      "Hint": "Po zaznaczeniu Sobriety Die każdego uzależnienia wzrasta o skonfigurowaną liczbę stopni. Postać po nawrocie rozpoczyna lub ponownie podejmuje zdrowienie z najniższą kością.",
+      "HintAll": "Po zaznaczeniu Sobriety Die każdego aktywnego uzależnienia wzrasta o skonfigurowaną liczbę stopni. Postać po nawrocie rozpoczyna lub ponownie podejmuje zdrowienie z najniższą kością.",
+      "HintSpecific": "Po zaznaczeniu Sobriety Die wybranego poniżej uzależnienia wzrasta o skonfigurowaną liczbę stopni. Postać po nawrocie rozpoczyna lub ponownie podejmuje zdrowienie z najniższą kością.",
       "Choice": "Wybór podczas downtime",
       "Target": "Cel zdrowienia",
       "AllAddictions": "Wszystkie uzależnienia",
-      "TargetHint": "GM: zwiększ kość wszystkich uzależnień albo skup ten downtime na jednym wybranym uzależnieniu.",
+      "ConfiguredTarget": "Skonfigurowany cel zdrowienia",
+      "SelectAddiction": "Uzależnienie, nad którym pracujesz",
+      "SelectAddictionHint": "Wybierz jedno aktywne uzależnienie tej postaci, które skorzysta ze zdrowienia podczas tego Long Rest.",
       "Selected": "Praca nad trzeźwością",
       "NotSelected": "Nie wybrano pracy nad zdrowieniem"
+    },
+    "RestSettings": {
+      "Title": "Cele zdrowienia podczas Long Rest",
+      "Mode": "Zakres zdrowienia podczas Long Rest",
+      "All": "Wszystkie uzależnienia",
+      "AllHint": "Wybranie Addiction Recovery podczas Long Rest wpływa na wszystkie aktywne uzależnienia tej postaci.",
+      "Specific": "Jedno uzależnienie wybrane podczas Long Rest",
+      "SpecificHint": "Gracz wybiera w oknie Long Rest jedno aktywne uzależnienie swojej postaci. Tylko ono korzysta ze zdrowienia.",
+      "Save": "Zapisz ustawienia Long Rest",
+      "Saved": "Zapisano zakres zdrowienia podczas Long Rest."
     },
     "Panel": {
       "Title": "Addiction Recovery",
@@ -148,6 +161,11 @@
       "showQuickPanel": {
         "Name": "Pokaż ruchomy panel GM",
         "Hint": "Wyświetla ruchomy i możliwy do zablokowania panel skrótów Addiction Recovery dla GM-a."
+      },
+      "longRestRecoveryConfig": {
+        "Name": "Zakres zdrowienia podczas Long Rest",
+        "Label": "Skonfiguruj zakres zdrowienia",
+        "Hint": "Wybierz, czy zdrowienie podczas Long Rest obejmuje wszystkie aktywne uzależnienia, czy jedno wybrane przez gracza podczas odpoczynku."
       }
     }
   }
