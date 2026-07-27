@@ -2,10 +2,10 @@
   "id": "addiction-recovery-system",
   "title": "Addiction Recovery System",
   "description": "Tools for running the Addiction Recovery System with Sobriety Dice, Triggers, downtime recovery, character-sheet tracking, and GM controls.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "url": "https://github.com/yarpenart/addiction-recovery-system",
   "manifest": "https://github.com/yarpenart/addiction-recovery-system/releases/latest/download/module.json",
-  "download": "https://github.com/yarpenart/addiction-recovery-system/releases/download/v0.1.1/addiction-recovery-system.zip",
+  "download": "https://github.com/yarpenart/addiction-recovery-system/releases/download/v0.1.2/addiction-recovery-system.zip",
   "authors": [
     {
       "name": "YarpenArt"
@@ -15,7 +15,7 @@
     "scripts/main.mjs"
   ],
   "styles": [
-    "styles/addiction-recovery-system.Css"
+    "styles/addiction-recovery-system.css"
   ],
   "languages": [
     {
