@@ -121,7 +121,7 @@
       "TriggerSent": "Sobriety Trigger sent to the character and GM.",
       "TriggerAlreadyResolved": "This Sobriety Trigger has already been resolved.",
       "ManualRollGMOnly": "Only the GM can make a manual Sobriety Die roll. Players roll from a Sobriety Trigger prompt.",
-      "VersionWarning": "Addiction Recovery System was built for Foundry VTT 13 build 351 and dnd5e 5.3.3. Other versions are not supported by this release."
+      "VersionWarning": "Addiction Recovery System was built for Foundry VTT 14 build 365 and dnd5e 5.3.3. Other versions are not supported by this release."
     },
     "Settings": {
       "dieLadder": {

@@ -121,7 +121,7 @@
       "TriggerSent": "Sobriety Trigger wysłano do postaci i GM-a.",
       "TriggerAlreadyResolved": "Ten Sobriety Trigger został już rozstrzygnięty.",
       "ManualRollGMOnly": "Tylko GM może wykonać ręczny rzut Sobriety Die. Gracz wykonuje rzut z komunikatu Sobriety Trigger.",
-      "VersionWarning": "Addiction Recovery System został przygotowany dla Foundry VTT 13 build 351 i dnd5e 5.3.3. Ta wersja modułu nie obsługuje innych wersji."
+      "VersionWarning": "Addiction Recovery System został przygotowany dla Foundry VTT 14 build 365 i dnd5e 5.3.3. Ta wersja modułu nie obsługuje innych wersji."
     },
     "Settings": {
       "dieLadder": {
