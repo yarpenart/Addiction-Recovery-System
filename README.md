@@ -46,6 +46,8 @@ recovery or relapse is portrayed.
 - GM-configurable die ladder, thresholds, step changes, downtime behavior,
   history size, default roll mode, and optional completion above the maximum die.
 - English and Polish interface using the current Foundry language.
+- Theme-aware window contrast: dark windows use light labels and controls,
+  while light windows use dark text.
 
 ## Installation
 
@@ -83,8 +85,8 @@ version tag is pushed.
 4. Create and push a matching tag, for example:
 
 ```bash
-git tag v0.1.9
-git push origin v0.1.9
+git tag v0.1.10
+git push origin v0.1.10
 ```
 
 The workflow verifies that the tag and manifest versions match, then publishes
