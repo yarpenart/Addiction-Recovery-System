@@ -8,6 +8,42 @@
 
 .ars-app {
   --input-height: 32px;
+  --ars-window-text: #f4f1f3;
+  --ars-window-muted: #c7c0c5;
+  color: var(--ars-window-text);
+  color-scheme: dark;
+}
+
+body:has(#interface.theme-light) .ars-app,
+.ars-app.theme-light {
+  --ars-window-text: #282328;
+  --ars-window-muted: #615961;
+  color-scheme: light;
+}
+
+body:has(#interface.theme-dark) .ars-app,
+.ars-app.theme-dark {
+  --ars-window-text: #f4f1f3;
+  --ars-window-muted: #c7c0c5;
+  color-scheme: dark;
+}
+
+.ars-app .window-content {
+  color: var(--ars-window-text);
+}
+
+.ars-app :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea, button) {
+  color: var(--ars-window-text);
+}
+
+.ars-app :where(input, textarea)::placeholder,
+.ars-app :where(.hint, .notes) {
+  color: var(--ars-window-muted);
+  opacity: 1;
+}
+
+.ars-app :where(.ars-source, .ars-history-count, .ars-empty, small) {
+  color: var(--ars-window-muted);
 }
 
 .ars-manager-layout {
@@ -576,6 +612,10 @@ details[open] > summary .ars-chevron {
 /* Sobriety Roll dialog */
 .ars-roll-dialog-window {
   --ars-dialog-surface: color-mix(in srgb, var(--ars-panel-bg) 96%, var(--ars-accent));
+  --ars-window-text: #f4f1f3;
+  --ars-window-muted: #c7c0c5;
+  color: var(--ars-window-text);
+  color-scheme: dark;
 }
 
 .ars-roll-dialog-window .window-content {
@@ -583,7 +623,7 @@ details[open] > summary .ars-chevron {
   background:
     radial-gradient(circle at 50% 0, rgba(182, 66, 99, 0.17), transparent 42%),
     var(--ars-dialog-surface);
-  color: #eee;
+  color: var(--ars-window-text);
 }
 
 .ars-roll-dialog-content {
@@ -736,13 +776,13 @@ details[open] > summary .ars-chevron {
 }
 
 .ars-rest-settings-mode > label small {
-  color: var(--color-text-dark-secondary);
+  color: var(--ars-window-muted);
   line-height: 1.35;
 }
 
 .ars-rest-settings-other > p {
   margin: 0 0 2px;
-  color: var(--color-text-dark-secondary);
+  color: var(--ars-window-muted);
   font-size: var(--font-size-12);
   line-height: 1.35;
 }
@@ -786,7 +826,14 @@ details[open] > summary .ars-chevron {
 }
 
 .ars-roll-dialog-content select {
-  color: #eee;
+  border-color: #4d5668;
+  background: #111722;
+  color: var(--ars-window-text);
+}
+
+.ars-roll-dialog-content select option {
+  background: #111722;
+  color: var(--ars-window-text);
 }
 
 .ars-roll-dialog-window .dialog-buttons,
