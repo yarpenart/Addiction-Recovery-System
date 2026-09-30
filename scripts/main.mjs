@@ -14,9 +14,11 @@ import {
 import { sobrietyDieIcon } from "./dice-icons.mjs";
 import { openManager, refreshManager } from "./manager.mjs";
 import { LongRestRecoverySettings } from "./rest-settings.mjs";
+import { clampPanelCoordinates } from "./panel-position.mjs";
 
 const SOCKET = `module.${MODULE_ID}`;
 const openTriggerDialogs = new Set();
+let quickPanelAbortController = null;
 
 Hooks.on(`${MODULE_ID}.triggerPromptCreated`, payload => {
   game.socket.emit(SOCKET, payload);
@@ -548,9 +550,14 @@ async function resolvePrompt(payload) {
 }
 
 async function renderQuickPanel() {
+  quickPanelAbortController?.abort();
+  quickPanelAbortController = null;
   document.getElementById("ars-quick-panel")?.remove();
   if ( !game.user?.isGM || !game.settings.get(MODULE_ID, "showQuickPanel") ) return;
 
+  const controller = new AbortController();
+  quickPanelAbortController = controller;
+  const { signal } = controller;
   const stored = game.user.getFlag(MODULE_ID, "quickPanel") ?? {};
   const panel = document.createElement("aside");
   panel.id = "ars-quick-panel";
@@ -587,42 +594,62 @@ async function renderQuickPanel() {
       </button>
     </div>`;
   document.body.append(panel);
+  clampPanelPosition(panel);
 
-  panel.querySelector("[data-ars-panel-manager]").addEventListener("click", () => openManager());
-  panel.querySelector("[data-ars-panel-trigger]").addEventListener("click", () => openManager({ focusSearch: true }));
+  panel.querySelector("[data-ars-panel-manager]").addEventListener("click", () => openManager(), { signal });
+  panel.querySelector("[data-ars-panel-trigger]").addEventListener("click", () => openManager({ focusSearch: true }), { signal });
   panel.querySelector("[data-ars-panel-settings]")
-    .addEventListener("click", () => game.settings.sheet.render({ force: true }));
+    .addEventListener("click", () => game.settings.sheet.render({ force: true }), { signal });
   panel.querySelector("[data-ars-panel-lock]").addEventListener("click", async () => {
     const current = game.user.getFlag(MODULE_ID, "quickPanel") ?? {};
     await game.user.setFlag(MODULE_ID, "quickPanel", { ...current, locked: !current.locked });
     renderQuickPanel();
-  });
+  }, { signal });
   panel.querySelector("[data-ars-panel-minimize]").addEventListener("click", async () => {
     const current = game.user.getFlag(MODULE_ID, "quickPanel") ?? {};
     await game.user.setFlag(MODULE_ID, "quickPanel", { ...current, minimized: !current.minimized });
     renderQuickPanel();
-  });
-  activatePanelDrag(panel);
+  }, { signal });
+  activatePanelDrag(panel, signal);
+  window.addEventListener("resize", () => clampPanelPosition(panel), { signal });
 }
 
-function activatePanelDrag(panel) {
+function clampPanelPosition(panel) {
+  const rect = panel.getBoundingClientRect();
+  const { left, top } = clampPanelCoordinates(
+    { left: rect.left, top: rect.top },
+    { width: window.innerWidth, height: window.innerHeight },
+    { width: rect.width, height: rect.height }
+  );
+  panel.style.left = `${left}px`;
+  panel.style.top = `${top}px`;
+  return { left, top };
+}
+
+function activatePanelDrag(panel, signal) {
   const handle = panel.querySelector("[data-ars-drag-handle]");
   handle.addEventListener("pointerdown", event => {
-    if ( panel.dataset.locked === "true" || event.target.closest("button") ) return;
+    if ( panel.dataset.locked === "true" || event.button !== 0 || event.target.closest("button") ) return;
     event.preventDefault();
+    const pointerId = event.pointerId;
     const rect = panel.getBoundingClientRect();
     const offsetX = event.clientX - rect.left;
     const offsetY = event.clientY - rect.top;
+    handle.setPointerCapture?.(pointerId);
 
     const move = moveEvent => {
+      if ( moveEvent.pointerId !== pointerId ) return;
       const maxLeft = Math.max(0, window.innerWidth - panel.offsetWidth);
       const maxTop = Math.max(0, window.innerHeight - panel.offsetHeight);
       panel.style.left = `${Math.max(0, Math.min(maxLeft, moveEvent.clientX - offsetX))}px`;
       panel.style.top = `${Math.max(0, Math.min(maxTop, moveEvent.clientY - offsetY))}px`;
     };
-    const stop = async () => {
-      document.removeEventListener("pointermove", move);
-      document.removeEventListener("pointerup", stop);
+    const stop = async finishEvent => {
+      if ( finishEvent.pointerId !== pointerId ) return;
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", stop);
+      window.removeEventListener("pointercancel", stop);
+      handle.releasePointerCapture?.(pointerId);
       const current = game.user.getFlag(MODULE_ID, "quickPanel") ?? {};
       await game.user.setFlag(MODULE_ID, "quickPanel", {
         ...current,
@@ -630,7 +657,8 @@ function activatePanelDrag(panel) {
         top: parseFloat(panel.style.top)
       });
     };
-    document.addEventListener("pointermove", move);
-    document.addEventListener("pointerup", stop, { once: true });
-  });
+    window.addEventListener("pointermove", move, { signal });
+    window.addEventListener("pointerup", stop, { signal });
+    window.addEventListener("pointercancel", stop, { signal });
+  }, { signal });
 }
